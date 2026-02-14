@@ -10,8 +10,14 @@ app = Flask(__name__)
 CORS(app)
 
 # Initialize Supabase
-url = "https://axoxgfbdlaqmaftwqlxp.supabase.co"
-key = "sb_publishable_a9dG4W6EfKvvhvku7Ffbaw_kBp-SsJi"
+# url = "https://axoxgfbdlaqmaftwqlxp.supabase.co"
+# key = "sb_publishable_a9dG4W6EfKvvhvku7Ffbaw_kBp-SsJi"
+url = os.environ.get("SUPABASE_URL")
+# Use Service Role Key for backend operations (bulk inserts)
+key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
+
+if not url or not key:
+    print("⚠️ Missing Supabase Environment Variables!")
 supabase: Client = create_client(url, key)
 
 # Robust mapping for entities to table names
