@@ -93,8 +93,19 @@ def handle_entity(entity):
             sort = request.args.get('sort', 'id')
             desc = sort.startswith('-')
             col = sort.lstrip('-')
+            invoice_id = request.args.get('invoice_id')
+            barcode = request.args.get('barcode')
+
+
+            if(table == "payment_trackers" and barcode):
+                res = supabase.table(table).select("*").eq("barcode", barcode).execute()
+                return jsonify(res.data)
+            if(table == "invoice_items" and invoice_id):
+                res = supabase.table(table).select("*").eq("invoice_id", invoice_id).execute()
+                return jsonify(res.data)
             
             res = supabase.table(table).select("*").order(col, desc=desc).execute()
+
             return jsonify(res.data)
         except Exception as e:
             print(f"Error fetching {table}: {e}")
