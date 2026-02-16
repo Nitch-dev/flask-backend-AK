@@ -153,6 +153,20 @@ def handle_entity_id(entity, id):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+@app.route('/api/del', methods=['POST'])
+def delete_all_data():
+    data = request.json
+    if data.get('password') != "DELETE123":
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        # We call a custom database function named 'truncate_all_tables'
+        # This function will contain the SQL logic you provided
+        response = supabase.rpc('truncate_all_tables', {}).execute()
+        
+        return jsonify({"message": "Database cleared successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 # --- VERCEL REQUIREMENT ---
 # For Vercel, the app instance is what matters, 
 # but we keep this for local testing.
