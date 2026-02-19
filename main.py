@@ -12,9 +12,12 @@ CORS(app)
 
 # --- SUPABASE CONFIGURATION ---
 # These are automatically provided if you used the Vercel Integration
-url = os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
+# url = os.environ.get("SUPABASE_URL")
+# key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
 
+url="https://axoxgfbdlaqmaftwqlxp.supabase.co"
+key="sb_publishable_a9dG4W6EfKvvhvku7Ffbaw_kBp-SsJi"
+        
 if not url or not key:
     print("⚠️ Warning: Supabase Environment Variables are missing!")
 
@@ -98,6 +101,7 @@ def handle_entity(entity):
             barcode = request.args.get('barcode')
             financial_year = request.args.get('financial_year')
             barcode = request.args.get('barcode')
+            
             if(table == "invoices" and financial_year):
                 res = supabase.table(table).select("*").eq("financial_year", financial_year).execute()
                 return jsonify(res.data)
@@ -172,6 +176,16 @@ def delete_all_data():
         return jsonify({"message": "Database cleared successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/api/Sales/delete-by-barcodes', methods=['POST'])
+def delete_by_barcodes():
+    data = request.get_json()
+    barcodes = data.get('barcodes', [])
+    print("got ur barcodes in backend", len(barcodes))
+    supabase.table('payment_trackers').delete().in_('barcode', barcodes).execute()
+    supabase.table('gsts').delete().in_('barcode', barcodes).execute()
+    supabase.table('sales').delete().in_('barcode', barcodes).execute()
+    return jsonify({ 'success': True, 'deleted_barcodes':  len(barcodes)}), 200
 # --- VERCEL REQUIREMENT ---
 # For Vercel, the app instance is what matters, 
 # but we keep this for local testing.
