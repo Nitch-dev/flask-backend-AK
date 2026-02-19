@@ -97,6 +97,7 @@ def handle_entity(entity):
             invoice = request.args.get('id')
             barcode = request.args.get('barcode')
             financial_year = request.args.get('financial_year')
+            barcode = request.args.get('barcode')
             if(table == "invoices" and financial_year):
                 res = supabase.table(table).select("*").eq("financial_year", financial_year).execute()
                 return jsonify(res.data)
@@ -110,7 +111,9 @@ def handle_entity(entity):
             if(table == "invoice_items" and invoice_id):
                 res = supabase.table(table).select("*").eq("invoice_id", invoice_id).execute()
                 return jsonify(res.data)
-            
+            if(table == "gsts" and barcode):
+                res = supabase.table(table).select("*").eq("barcode", barcode).execute()
+                return jsonify(res.data)
             res = supabase.table(table).select("*").order(col, desc=desc).execute()
 
             return jsonify(res.data)
