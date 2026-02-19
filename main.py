@@ -15,6 +15,9 @@ CORS(app)
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
 
+# url="https://axoxgfbdlaqmaftwqlxp.supabase.co"
+# key="sb_publishable_a9dG4W6EfKvvhvku7Ffbaw_kBp-SsJi"
+        
 if not url or not key:
     print("⚠️ Warning: Supabase Environment Variables are missing!")
 
@@ -98,7 +101,11 @@ def handle_entity(entity):
             barcode = request.args.get('barcode')
             financial_year = request.args.get('financial_year')
             barcode = request.args.get('barcode')
+            importBatch = request.args.get('import_batch_id')
             
+            if(table == "sales" and importBatch):
+                res = supabase.table(table).select("*").eq("import_batch_id", importBatch).execute()
+                return jsonify(res.data)
             if(table == "invoices" and financial_year):
                 res = supabase.table(table).select("*").eq("financial_year", financial_year).execute()
                 return jsonify(res.data)
@@ -188,4 +195,3 @@ def delete_by_barcodes():
 # but we keep this for local testing.
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
