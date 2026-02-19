@@ -12,12 +12,9 @@ CORS(app)
 
 # --- SUPABASE CONFIGURATION ---
 # These are automatically provided if you used the Vercel Integration
-# url = os.environ.get("SUPABASE_URL")
-# key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
+url = os.environ.get("SUPABASE_URL")
+key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
 
-url="https://axoxgfbdlaqmaftwqlxp.supabase.co"
-key="sb_publishable_a9dG4W6EfKvvhvku7Ffbaw_kBp-SsJi"
-        
 if not url or not key:
     print("⚠️ Warning: Supabase Environment Variables are missing!")
 
@@ -191,3 +188,4 @@ def delete_by_barcodes():
 # but we keep this for local testing.
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
+
